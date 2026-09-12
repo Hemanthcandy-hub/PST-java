@@ -1,0 +1,74 @@
+import java.util.*;
+
+class ThroneInheritance {
+
+    class Person {
+        String name;
+        boolean alive;
+        List<Person> children;
+
+        Person(String name) {
+            this.name = name;
+            this.alive = true;
+            this.children = new ArrayList<>();
+        }
+    }
+
+    private Person king;
+    private Map<String, Person> people;
+
+    public ThroneInheritance(String kingName) {
+        king = new Person(kingName);
+        people = new HashMap<>();
+        people.put(kingName, king);
+    }
+
+    public void birth(String parentName, String childName) {
+        Person parent = people.get(parentName);
+        Person child = new Person(childName);
+
+        parent.children.add(child);
+        people.put(childName, child);
+    }
+
+    public void death(String name) {
+        people.get(name).alive = false;
+    }
+
+    public List<String> getInheritanceOrder() {
+        List<String> result = new ArrayList<>();
+        dfs(king, result);
+        return result;
+    }
+
+    private void dfs(Person person, List<String> result) {
+        if (person.alive) {
+            result.add(person.name);
+        }
+
+        for (Person child : person.children) {
+            dfs(child, result);
+        }
+    }
+}
+["ThroneInheritance", "birth", "birth", "birth", "birth",
+ "birth", "getInheritanceOrder", "death", "getInheritanceOrder"]
+
+[["king"],
+ ["king", "andy"],
+ ["king", "bob"],
+ ["king", "catherine"],
+ ["andy", "matthew"],
+ ["bob", "alex"],
+ [], 
+ ["bob"],
+ []]
+[null,
+ null,
+ null,
+ null,
+ null,
+ null,
+ ["king", "andy", "matthew", "alex", "bob", "catherine"],
+ null,
+ ["king", "andy", "matthew", "alex", "catherine"]]
