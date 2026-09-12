@@ -1,0 +1,97 @@
+import java.util.*;
+
+class UndergroundSystem {
+
+    class CheckIn {
+        String station;
+        int time;
+
+        CheckIn(String station, int time) {
+            this.station = station;
+            this.time = time;
+        }
+    }
+
+    class Route {
+        int totalTime;
+        int count;
+
+        Route(int totalTime, int count) {
+            this.totalTime = totalTime;
+            this.count = count;
+        }
+    }
+
+    HashMap<Integer, CheckIn> checkIns = new HashMap<>();
+    HashMap<String, Route> routes = new HashMap<>();
+
+    public UndergroundSystem() {
+    }
+
+    public void checkIn(int id, String stationName, int t) {
+        checkIns.put(id, new CheckIn(stationName, t));
+    }
+
+    public void checkOut(int id, String stationName, int t) {
+        CheckIn in = checkIns.get(id);
+
+        String route = in.station + "->" + stationName;
+        int travelTime = t - in.time;
+
+        if (!routes.containsKey(route)) {
+            routes.put(route, new Route(travelTime, 1));
+        } else {
+            Route r = routes.get(route);
+            r.totalTime += travelTime;
+            r.count++;
+        }
+
+        checkIns.remove(id);
+    }
+
+    public double getAverageTime(String startStation, String endStation) {
+        String route = startStation + "->" + endStation;
+        Route r = routes.get(route);
+
+        return (double) r.totalTime / r.count;
+    }
+}
+["UndergroundSystem",
+ "checkIn",
+ "checkIn",
+ "checkIn",
+ "checkOut",
+ "checkOut",
+ "checkOut",
+ "getAverageTime",
+ "getAverageTime",
+ "checkIn",
+ "getAverageTime",
+ "checkOut",
+ "getAverageTime"]
+
+[1, "Leyton", 3]
+[2, "Paradise", 8]
+[3, "Leyton", 10]
+[1, "Waterloo", 15]
+[3, "Paradise", 16]
+[2, "Cambridge", 22]
+["Leyton", "Waterloo"]
+["Paradise", "Cambridge"]
+[4, "Leyton", 8]
+["Leyton", "Waterloo"]
+[4, "Waterloo", 18]
+["Leyton", "Waterloo"]
+[null,
+ null,
+ null,
+ null,
+ null,
+ null,
+ null,
+ 12.0,
+ 14.0,
+ null,
+ 12.0,
+ null,
+ 11.0]
